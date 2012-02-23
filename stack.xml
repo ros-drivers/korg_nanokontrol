@@ -1,0 +1,13 @@
+<stack>
+   <description brief="korg_nanokontrol">
+      ROS driver to use the Kork NanoKontrol MIDI device as a joystick.
+   </description>
+  <author>Maintained by Austin Hendrix</author>
+  <license>BSD</license>  
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/korg_nanokontrol</url>
+  <depend stack="ros" />
+  <depend stack="ros_comm" />
+  <depend stack="common_msgs" />
+
+</stack>

@@ -1,0 +1,16 @@
+<package>
+  <description brief="kontrol">
+      ROS driver to use the Kork NanoKontrol MIDI device as a joystick.
+  </description>
+  <author>Austin Hendrix</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/kontrol</url>
+  <depend package="rospy"/>
+  <depend package="sensor_msgs"/>
+
+  <!-- TODO: add rosdep on pygame -->
+
+</package>
+
+
