@@ -1,0 +1,3 @@
+- git: 
+   uri: 'https://kforge.ros.org/korg_nanokontrol/korg_nanokontrol'
+   local-name: 'korg_nanokontrol'
