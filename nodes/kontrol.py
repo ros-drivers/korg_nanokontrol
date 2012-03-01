@@ -137,7 +137,7 @@ def main():
          pub.publish(m)
          p = False
 
-      rospy.sleep(0.02) # 50Hz maximum input
+      rospy.sleep(0.1) # 10Hz maximum input
                   
 
 
