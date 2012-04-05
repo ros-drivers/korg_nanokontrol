@@ -83,7 +83,7 @@ def main():
    controller = pygame.midi.Input(input_dev)
 
    rospy.init_node('kontrol')
-   pub = rospy.Publisher('joy', Joy)
+   pub = rospy.Publisher('joy', Joy, latch=True)
 
    m = Joy()
    m.axes = [ 0 ] * 18
