@@ -37,7 +37,7 @@ control_axes = [{
   2058: 17,
   }]
 
-control_button = [[
+control_buttons = [[
   # mode 1
   # up, down
   23, 33, 24, 34, 25, 35, 26, 36, 27, 37, 28, 38, 29, 39, 30, 40, 31, 41,
@@ -88,7 +88,7 @@ def main():
    m = Joy()
    m.axes = [ 0 ] * 18
    m.buttons = [ 0 ] * 25
-   mode = 0
+   mode = None
 
    p = False
 
@@ -109,6 +109,26 @@ def main():
             if (control[0] & 0xF0) == 176:
                control_id = control[1] | ((control[0] & 0x0F) << 8)
 
+               # guess initial mode based on command
+               if mode is None:
+                  candidate = None
+                  for index, control_axis in enumerate(control_axes):
+                     if control_id in control_axis:
+                        if candidate is not None:
+                           candidate = None
+                           break
+                        candidate = index
+                  for index, control_button in enumerate(control_buttons):
+                     if control_id in control_button:
+                        if candidate is not None:
+                           candidate = None
+                           break
+                        candidate = index
+                  mode = candidate
+                  if mode is None:
+                     print 'skipped because mode is yet unknown'
+                     continue
+
                if control_id in control_axes[mode]:
                   control_val = float(control[2] - 63) / 63.0
                   if control_val < -1.0:
@@ -120,8 +140,8 @@ def main():
                   m.axes[axis] = control_val
                   p = True
 
-               if control_id in control_button[mode]:
-                  button = control_button[mode].index(control_id)
+               if control_id in control_buttons[mode]:
+                  button = control_buttons[mode].index(control_id)
                   if control[2] != 0:
                      m.buttons[button] = 1
                   else:
