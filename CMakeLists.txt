@@ -7,4 +7,5 @@ find_package(catkin REQUIRED)
 catkin_package(
       CATKIN_DEPENDS rospy sensor_msgs)
 
-install(PROGRAMS nodes/kontrol.py DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+install(PROGRAMS nodes/kontrol.py
+   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
