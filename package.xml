@@ -2,7 +2,7 @@
   <name>korg_nanokontrol</name>
   <version>0.1.1</version>
   <description>
-      ROS driver to use the Kork NanoKontrol MIDI device as a joystick.
+      ROS driver to use the Korg NanoKontrol MIDI device as a joystick.
   </description>
   <maintainer email="ahendrix@willowgarage.com">Austin Hendrix</maintainer>
   <license>BSD</license>
