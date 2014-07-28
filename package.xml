@@ -4,7 +4,7 @@
   <description>
       ROS driver to use the Kork NanoKontrol MIDI device as a joystick.
   </description>
-  <maintainer email="ahendrix@willowgarage.com">Austin Hendrix</maintainer>
+  <maintainer email="namniart@gmail.com">Austin Hendrix</maintainer>
   <license>BSD</license>
   <author>Austin Hendrix</author>
   <url>http://ros.org/wiki/korg_nanokontrol</url>
