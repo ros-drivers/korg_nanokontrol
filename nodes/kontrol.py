@@ -54,11 +54,52 @@ def main():
     modes = rospy.get_param('modes')
 
     m = Joy()
-    m.axes = [0] * 18
-    m.buttons = [0] * 25
-    mode = None
-
     p = False
+
+    def guess_mode():
+        while not rospy.is_shutdown():
+            mode = None
+            while controller.poll():
+                data = controller.read(1)
+                # print data
+                # loop through events received
+                for event in data:
+                    control = event[0]
+
+                    # look for continuous controller commands
+                    if (control[0] & 0xF0) == 176:
+                        control_id = control[1] | ((control[0] & 0x0F) << 8)
+
+                        # guess initial mode based on command
+                        candidate = None
+                        for index, control_mode in enumerate(modes):
+                            if control_id in control_mode['control_axis']:
+                                if candidate is not None:
+                                    candidate = None
+                                    break
+                                candidate = index
+
+                            if control_id in control_mode['control_buttons']:
+                                if candidate is not None:
+                                    candidate = None
+                                    break
+                                candidate = index
+                        mode = candidate
+                        if mode is not None:
+                            return mode
+                        else:
+                            rospy.loginfo("determining mode")
+        exit(-1)
+
+    def set_mode(mode):
+        m.axes = [0]*len(modes[mode]['control_axis'])
+        m.buttons = [0]*len(modes[mode]['control_buttons'])
+        m.buttons.append(mode)
+
+    mode = guess_mode()
+
+    set_mode(mode)
+
 
     while not rospy.is_shutdown():
         m.header.stamp = rospy.Time.now()
@@ -77,26 +118,6 @@ def main():
                 if (control[0] & 0xF0) == 176:
                     control_id = control[1] | ((control[0] & 0x0F) << 8)
 
-                    # guess initial mode based on command
-                    if mode is None:
-                        candidate = None
-                        for index, mode in enumerate(modes):
-                            if control_id in mode['control_axis']:
-                                if candidate is not None:
-                                    candidate = None
-                                    break
-                                candidate = index
-
-                            if control_id in mode['control_buttons']:
-                                if candidate is not None:
-                                    candidate = None
-                                    break
-                                candidate = index
-                        mode = candidate
-                        if mode is None:
-                            print 'skipped because mode is yet unknown'
-                            continue
-
                     control_axis = modes[mode]['control_axis']
                     control_buttons = modes[mode]['control_buttons']
 
@@ -107,7 +128,7 @@ def main():
                         if control_val > 1.0:
                             control_val = 1.0
 
-                        axis = control_axis[control_id]
+                        axis = control_axis.index(control_id)
                         m.axes[axis] = control_val
                         p = True
 
@@ -122,7 +143,7 @@ def main():
                 # look for mode commands
                 elif control[0] == 79:
                     mode = control[1]
-                    m.buttons[24] = mode
+                    set_mode(mode)
                     p = True
 
         if p:
