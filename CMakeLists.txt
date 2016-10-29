@@ -9,3 +9,6 @@ catkin_package(
 
 install(PROGRAMS nodes/kontrol.py
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+
+install(DIRECTORY config
+   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})

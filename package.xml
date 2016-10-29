@@ -7,13 +7,14 @@
   <maintainer email="namniart@gmail.com">Austin Hendrix</maintainer>
   <license>BSD</license>
   <author>Austin Hendrix</author>
+  <author>Allison Thackston</author>
   <url>http://ros.org/wiki/korg_nanokontrol</url>
 
   <buildtool_depend>catkin</buildtool_depend>
   <run_depend>rospy</run_depend>
   <run_depend>sensor_msgs</run_depend>
   <run_depend>python-pygame</run_depend>
-  
+
 </package>
 
 
