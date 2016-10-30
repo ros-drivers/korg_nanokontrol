@@ -53,6 +53,9 @@ def main():
 
     modes = rospy.get_param('modes')
 
+    # determine how axis should be interpreted
+    center_axis = rospy.get_param('center_axis', True)
+
     m = Joy()
     p = False
 
@@ -122,11 +125,18 @@ def main():
                     control_buttons = modes[mode]['control_buttons']
 
                     if control_id in control_axis:
-                        control_val = float(control[2] - 63) / 63.0
-                        if control_val < -1.0:
-                            control_val = -1.0
-                        if control_val > 1.0:
-                            control_val = 1.0
+                        if center_axis:
+                            control_val = float(control[2] - 63) / 63.0
+                            if control_val < -1.0:
+                                control_val = -1.0
+                            if control_val > 1.0:
+                                control_val = 1.0
+                        else:
+                            control_val = float(control[2]) / 127
+                            if control_val < 0:
+                                control_val = 0
+                            if control_val > 1.0:
+                                control_val = 1.0
 
                         axis = control_axis.index(control_id)
                         m.axes[axis] = control_val
