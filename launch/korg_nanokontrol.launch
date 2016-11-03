@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<launch>
+    <arg name="device" default="1"/>
+    <node name="korg_nanokontrol" pkg="korg_nanokontrol" type="kontrol.py"  args="$(arg device)" output="screen" />
+    <rosparam command="load" file="$(find korg_nanokontrol)/config/nanokontrol_config.yaml" />
+</launch>

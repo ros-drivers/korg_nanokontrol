@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<launch>
+    <arg name="device" default="1"/>
+    <arg name="center_axis" default="True" />
+    <node name="korg_nanokontrol" pkg="korg_nanokontrol" type="kontrol.py"  args="$(arg device)" output="screen"/>
+    <rosparam command="load" file="$(find korg_nanokontrol)/config/nanokontrol2_config.yaml" />
+    <rosparam param="center_axis" subst_value="true" >$(arg center_axis)</rosparam>
+</launch>

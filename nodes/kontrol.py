@@ -64,7 +64,6 @@ def main():
             mode = None
             while controller.poll():
                 data = controller.read(1)
-                # print data
                 # loop through events received
                 for event in data:
                     control = event[0]
@@ -111,7 +110,7 @@ def main():
         while controller.poll():
             c += 1
             data = controller.read(1)
-            # print data
+            rospy.logdebug(data)
             # loop through events received
             for event in data:
                 control = event[0]
