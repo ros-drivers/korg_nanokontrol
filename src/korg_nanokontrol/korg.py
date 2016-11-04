@@ -31,8 +31,8 @@ class KorgNanoKontrol(object):
             exit(-1)
         rospy.loginfo("Found %d MIDI devices" % devices)
 
-        input_dev = rospy.get_param(
-            "input_dev", pygame.midi.get_default_input_id)
+        input_dev = int(rospy.get_param(
+            "input_dev", pygame.midi.get_default_input_id))
 
         rospy.loginfo("Using input device %d" % input_dev)
 
@@ -61,15 +61,15 @@ class KorgNanoKontrol(object):
         '''
         while self.controller.poll():
             data = self.controller.read(1)
-            if self.mode:
-                self.pub_data(data)
-            else:
+            if self.mode == None:
                 self.set_mode(self.guess_mode(data))
+            else:
+                self.pub_data(data)
 
     def set_mode(self, mode):
         ''' Set up the message for the correct mode
         '''
-        if mode:
+        if not mode==None:
             self.mode = mode
             self.msg.axes = [0]*len(self.modes[mode]['control_axis'])
             self.msg.buttons = [0]*len(self.modes[mode]['control_buttons'])
@@ -102,11 +102,18 @@ class KorgNanoKontrol(object):
                 if not candidate:
                     rospy.loginfo("determining mode..")
                 return candidate
+    def clip(self, min, max, val):
+        if val < min:
+            val = min
+        if val > max:
+            val = max
+        return val
 
     def pub_data(self, data):
         ''' Given data, interpret into Joy message and publish
         '''
         do_publish = False
+        self.msg.header.stamp = rospy.Time.now()
         for event in data:
             control = event[0]
             # @todo use timestamp from msg
@@ -121,17 +128,9 @@ class KorgNanoKontrol(object):
 
                 if control_id in control_axis:
                     if self.center_axis:
-                        control_val = float(control[2] - 63) / 63.0
-                        if control_val < -1.0:
-                            control_val = -1.0
-                        if control_val > 1.0:
-                            control_val = 1.0
+                        control_val = self.clip(-1.0, 1.0, float(control[2] - 63) / 63.0)
                     else:
-                        control_val = float(control[2]) / 127
-                        if control_val < 0:
-                            control_val = 0
-                        if control_val > 1.0:
-                            control_val = 1.0
+                        control_val = self.clip(0.0, 1.0, float(control[2]) / 127)
 
                     axis = control_axis.index(control_id)
                     self.msg.axes[axis] = control_val
