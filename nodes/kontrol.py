@@ -17,6 +17,7 @@ if __name__ == '__main__':
         rospy.set_param("input_dev", input_dev)
     try:
         kontrol = KorgNanoKontrol()
+        rospy.on_shutdown(kontrol.finish)
 
         while not rospy.is_shutdown():
             kontrol.update()

@@ -56,6 +56,10 @@ class KorgNanoKontrol(object):
 
         self.pub = rospy.Publisher('joy', Joy, latch=True)
 
+    def finish(self):
+        del self.controller
+        pygame.midi.quit()
+
     def update(self):
         ''' run the update hook (poll the midi controller, publish the message)
         '''
@@ -102,6 +106,7 @@ class KorgNanoKontrol(object):
                 if not candidate:
                     rospy.loginfo("determining mode..")
                 return candidate
+
     def clip(self, min, max, val):
         if val < min:
             val = min
