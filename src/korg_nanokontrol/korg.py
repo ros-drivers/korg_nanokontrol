@@ -41,8 +41,8 @@ class KorgNanoKontrol(object):
         # load in default parameters if not set
         if not rospy.has_param('modes'):
             rospack = rospkg.RosPack()
-            paramlist = rosparam.load_file(
-                rospack.get_path('korg_nanokontrol')+'/config/nano_kontrol_config.yaml')
+            paramlist = rosparam.load_file(rospack.get_path('korg_nanokontrol') +
+                                           '/config/nanokontrol_config.yaml')
             for params, ns in paramlist:
                 rosparam.upload_params(ns, params)
 
@@ -54,7 +54,7 @@ class KorgNanoKontrol(object):
         self.msg = Joy()
         self.mode = None
 
-        self.pub = rospy.Publisher('joy', Joy, latch=True)
+        self.pub = rospy.Publisher('joy', Joy, queue_size=10, latch=True)
 
     def finish(self):
         del self.controller
@@ -73,7 +73,7 @@ class KorgNanoKontrol(object):
     def set_mode(self, mode):
         ''' Set up the message for the correct mode
         '''
-        if not mode==None:
+        if not mode == None:
             self.mode = mode
             self.msg.axes = [0]*len(self.modes[mode]['control_axis'])
             self.msg.buttons = [0]*len(self.modes[mode]['control_buttons'])
@@ -133,9 +133,11 @@ class KorgNanoKontrol(object):
 
                 if control_id in control_axis:
                     if self.center_axis:
-                        control_val = self.clip(-1.0, 1.0, float(control[2] - 63) / 63.0)
+                        control_val = self.clip(-1.0, 1.0,
+                                                float(control[2] - 63) / 63.0)
                     else:
-                        control_val = self.clip(0.0, 1.0, float(control[2]) / 127)
+                        control_val = self.clip(0.0, 1.0,
+                                                float(control[2]) / 127)
 
                     axis = control_axis.index(control_id)
                     self.msg.axes[axis] = control_val
