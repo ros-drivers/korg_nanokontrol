@@ -14,7 +14,7 @@ if __name__ == '__main__':
     rospy.init_node('kontrol')
     if len(sys.argv) > 1:
         input_dev = int(sys.argv[1])
-        rospy.set_param("input_dev", input_dev)
+        rospy.set_param("~input_dev", input_dev)
     try:
         kontrol = KorgNanoKontrol()
         rospy.on_shutdown(kontrol.finish)

@@ -31,25 +31,25 @@ class KorgNanoKontrol(object):
             exit(-1)
         rospy.loginfo("Found %d MIDI devices" % devices)
 
-        input_dev = int(rospy.get_param(
-            "input_dev", pygame.midi.get_default_input_id))
+        input_dev = int(rospy.get_param("~input_dev",
+                                        pygame.midi.get_default_input_id))
 
         rospy.loginfo("Using input device %d" % input_dev)
 
         self.controller = pygame.midi.Input(input_dev)
 
         # load in default parameters if not set
-        if not rospy.has_param('modes'):
+        if not rospy.has_param('~modes'):
             rospack = rospkg.RosPack()
             paramlist = rosparam.load_file(rospack.get_path('korg_nanokontrol') +
                                            '/config/nanokontrol_config.yaml')
             for params, ns in paramlist:
                 rosparam.upload_params(ns, params)
 
-        self.modes = rospy.get_param('modes')
+        self.modes = rospy.get_param('~modes')
 
         # determine how axis should be interpreted
-        self.center_axis = rospy.get_param('center_axis', True)
+        self.center_axis = rospy.get_param('~center_axis', True)
 
         self.msg = Joy()
         self.mode = None
